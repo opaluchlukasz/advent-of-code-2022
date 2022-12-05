@@ -33,7 +33,6 @@ public class AdventOfCode006 {
         CharHashSet select = firstSet.select(c -> secondSet.contains(c) && thirdSet.contains(c));
 
         return prioritise(select);
-
     }
 
     private static long prioritise(CharHashSet duplicates) {
