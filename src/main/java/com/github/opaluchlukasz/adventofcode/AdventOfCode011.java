@@ -15,8 +15,7 @@ public class AdventOfCode011 {
 
     private static int solve(String line) {
         for (int i = 0; i < line.length() - MESSAGE_LENGTH; i++) {
-            CharHashSet set = new CharHashSet();
-            set.addAll(line.substring(i, i  + MESSAGE_LENGTH).toCharArray());
+            CharHashSet set = new CharHashSet(line.substring(i, i  + MESSAGE_LENGTH).toCharArray());
             if (set.size() == MESSAGE_LENGTH) {
                 return i + MESSAGE_LENGTH;
             }
