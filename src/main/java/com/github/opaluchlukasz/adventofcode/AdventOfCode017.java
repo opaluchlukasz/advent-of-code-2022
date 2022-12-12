@@ -24,14 +24,14 @@ public class AdventOfCode017 {
     private static List<Move> asMoves(List<String> input) {
         return input.stream().map(row ->  {
             String[] move = row.split(" ");
-            return new Move(Direction.valueOf(move[0]), Integer.parseInt(move[1]));
+            return new Move(Coordinates.Direction.valueOf(move[0]), Integer.parseInt(move[1]));
         }).toList();
     }
 
-    private static Set<Coordinate> countVisitedPoints(List<Move> moves) {
-        Set<Coordinate> visited = new HashSet<>();
-        Coordinate head = new Coordinate(0, 0);
-        Coordinate tail = new Coordinate(0, 0);
+    private static Set<Coordinates> countVisitedPoints(List<Move> moves) {
+        Set<Coordinates> visited = new HashSet<>();
+        Coordinates head = new Coordinates(0, 0);
+        Coordinates tail = new Coordinates(0, 0);
         visited.add(tail);
 
         for (Move move : moves) {
@@ -45,55 +45,40 @@ public class AdventOfCode017 {
         return visited;
     }
 
-    private static Coordinate follow(Coordinate tail, Coordinate head) {
+    private static Coordinates follow(Coordinates tail, Coordinates head) {
         if (tail.equals(head) || !tooFarApart(head, tail)) {
             return tail;
         }
         if (tail.x() == head.x()) {
             if (tail.y() < head.y()) {
-                return new Coordinate(tail.x(), tail.y() + 1);
+                return new Coordinates(tail.x(), tail.y() + 1);
             } else {
-                return new Coordinate(tail.x(), tail.y() - 1);
+                return new Coordinates(tail.x(), tail.y() - 1);
             }
         }
         if (tail.y() == head.y()) {
             if (tail.x() < head.x()) {
-                return new Coordinate(tail.x() + 1, tail.y());
+                return new Coordinates(tail.x() + 1, tail.y());
             } else {
-                return new Coordinate(tail.x() - 1, tail.y());
+                return new Coordinates(tail.x() - 1, tail.y());
             }
         }
         if (tail.y() < head.y()) {
             if (tail.x() < head.x()) {
-                return new Coordinate(tail.x() + 1, tail.y() + 1);
+                return new Coordinates(tail.x() + 1, tail.y() + 1);
             }
-            return new Coordinate(tail.x() - 1, tail.y() + 1);
+            return new Coordinates(tail.x() - 1, tail.y() + 1);
         }
 
         if (tail.x() > head.x()) {
-            return new Coordinate(tail.x() - 1, tail.y() - 1);
+            return new Coordinates(tail.x() - 1, tail.y() - 1);
         }
-        return new Coordinate(tail.x() + 1, tail.y() - 1);
+        return new Coordinates(tail.x() + 1, tail.y() - 1);
     }
 
-    private static boolean tooFarApart(Coordinate head, Coordinate tail) {
+    private static boolean tooFarApart(Coordinates head, Coordinates tail) {
         return Math.abs(head.x() - tail.x()) > 1 || Math.abs(head.y() - tail.y()) > 1;
     }
 
-    public enum Direction {
-        U, D, R, L
-    }
-
-    public record Move(Direction direction, int distance) { }
-
-    public record Coordinate(int x, int y) {
-        public Coordinate move(Direction direction) {
-            return switch (direction) {
-                case D -> new Coordinate(x, y - 1);
-                case U -> new Coordinate(x, y + 1);
-                case L -> new Coordinate(x - 1, y);
-                case R -> new Coordinate(x + 1, y);
-            };
-        }
-    }
+    public record Move(Coordinates.Direction direction, int distance) { }
 }

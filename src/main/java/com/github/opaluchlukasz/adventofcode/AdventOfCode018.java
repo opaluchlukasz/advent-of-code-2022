@@ -6,7 +6,7 @@ import java.util.*;
 
 public class AdventOfCode018 {
     private static final int NUMBER_OF_KNOTS = 10;
-    private static final Coordinate STARTING_POINT = new Coordinate(0, 0);
+    private static final Coordinates STARTING_POINT = new Coordinates(0, 0);
 
     public static void main(String[] args) {
         System.out.println(solve("input_009"));
@@ -26,13 +26,13 @@ public class AdventOfCode018 {
     private static List<Move> asMoves(List<String> input) {
         return input.stream().map(row ->  {
             String[] move = row.split(" ");
-            return new Move(Direction.valueOf(move[0]), Integer.parseInt(move[1]));
+            return new Move(Coordinates.Direction.valueOf(move[0]), Integer.parseInt(move[1]));
         }).toList();
     }
 
-    private static Set<Coordinate> countVisitedPoints(List<Move> moves) {
-        Set<Coordinate> visited = new HashSet<>();
-        List<Coordinate> rope = new ArrayList<>();
+    private static Set<Coordinates> countVisitedPoints(List<Move> moves) {
+        Set<Coordinates> visited = new HashSet<>();
+        List<Coordinates> rope = new ArrayList<>();
         for(int i = 0; i < NUMBER_OF_KNOTS; i++) {
             rope.add(STARTING_POINT);
         }
@@ -43,8 +43,8 @@ public class AdventOfCode018 {
             for (int s = 0; s < move.distance; s++) {
                 rope.set(0, rope.get(0).move(move.direction));
                 for (int i = 1; i < NUMBER_OF_KNOTS; i++) {
-                    Coordinate prev = rope.get(i - 1);
-                    Coordinate current = rope.get(i);
+                    Coordinates prev = rope.get(i - 1);
+                    Coordinates current = rope.get(i);
                     if (tooFarApart(prev, current)) {
                         rope.set(i, follow(current, prev));
                     }
@@ -59,42 +59,42 @@ public class AdventOfCode018 {
         return visited;
     }
 
-    private static Coordinate follow(Coordinate tail, Coordinate head) {
+    private static Coordinates follow(Coordinates tail, Coordinates head) {
         if (tail.equals(head)) {
             return tail;
         }
         if (tail.x() == head.x()) {
             if (tail.y() < head.y()) {
-                return new Coordinate(tail.x(), tail.y() + 1);
+                return new Coordinates(tail.x(), tail.y() + 1);
             } else {
-                return new Coordinate(tail.x(), tail.y() - 1);
+                return new Coordinates(tail.x(), tail.y() - 1);
             }
         }
         if (tail.y() == head.y()) {
             if (tail.x() < head.x()) {
-                return new Coordinate(tail.x() + 1, tail.y());
+                return new Coordinates(tail.x() + 1, tail.y());
             } else {
-                return new Coordinate(tail.x() - 1, tail.y());
+                return new Coordinates(tail.x() - 1, tail.y());
             }
         }
         if (tail.y() < head.y()) {
             if (tail.x() < head.x()) {
-                return new Coordinate(tail.x() + 1, tail.y() + 1);
+                return new Coordinates(tail.x() + 1, tail.y() + 1);
             }
-            return new Coordinate(tail.x() - 1, tail.y() + 1);
+            return new Coordinates(tail.x() - 1, tail.y() + 1);
         }
 
         if (tail.x() > head.x()) {
-            return new Coordinate(tail.x() - 1, tail.y() - 1);
+            return new Coordinates(tail.x() - 1, tail.y() - 1);
         }
-        return new Coordinate(tail.x() + 1, tail.y() - 1);
+        return new Coordinates(tail.x() + 1, tail.y() - 1);
     }
 
-    private static boolean tooFarApart(Coordinate head, Coordinate tail) {
+    private static boolean tooFarApart(Coordinates head, Coordinates tail) {
         return Math.abs(head.x() - tail.x()) > 1 || Math.abs(head.y() - tail.y()) > 1;
     }
 
-    private static void draw(Collection<Coordinate> coordinates) {
+    private static void draw(Collection<Coordinates> coordinates) {
         MutableInt minX = new MutableInt();
         MutableInt maxX = new MutableInt();
         MutableInt minY = new MutableInt();
@@ -119,7 +119,7 @@ public class AdventOfCode018 {
             for (int j = minY.intValue(); j <= maxY.intValue(); j++) {
                 if (i == 0 && j == 0) {
                     row.append("s");
-                } else if (coordinates.contains(new Coordinate(i, j))) {
+                } else if (coordinates.contains(new Coordinates(i, j))) {
                     row.append("#");
                 } else {
                     row.append(".");
@@ -130,20 +130,5 @@ public class AdventOfCode018 {
         System.out.println();
     }
 
-    public enum Direction {
-        U, D, R, L
-    }
-
-    public record Move(Direction direction, int distance) { }
-
-    public record Coordinate(int x, int y) {
-        public Coordinate move(Direction direction) {
-            return switch (direction) {
-                case D -> new Coordinate(x, y - 1);
-                case U -> new Coordinate(x, y + 1);
-                case L -> new Coordinate(x - 1, y);
-                case R -> new Coordinate(x + 1, y);
-            };
-        }
-    }
+    public record Move(Coordinates.Direction direction, int distance) { }
 }
