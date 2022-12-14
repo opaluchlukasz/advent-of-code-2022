@@ -39,6 +39,7 @@ public class AdventOfCode026 {
             }
            if (pairs.get(i).toString().equals(END)) {
                end = i + 1;
+               break;
            }
         }
        return start * end;
